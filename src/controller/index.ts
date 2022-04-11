@@ -170,7 +170,7 @@ const deleteManga = async (req: express.Request, res: express.Response) => {
     const newArr = []
     oldArr.filter(o => {
       if (o.mangaEP !== manga_ep) {
-        newArr.unshift(o)
+        newArr.push(o)
       }
     })
 
