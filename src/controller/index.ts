@@ -162,6 +162,7 @@ const addManga = async (req: express.Request, res: express.Response) => {
 const deleteManga = async (req: express.Request, res: express.Response) => {
   try {
     const manga_ep = req.body.manga_ep
+    console.log(manga_ep)
     const id = res.locals.id;
     const user = await User.findById(id);
     const oldArr = user.readingList
