@@ -145,7 +145,7 @@ const addManga = async (req: express.Request, res: express.Response) => {
     const id = res.locals.id;
     const user = await User.findById(id);
     const updateUser = await User.findByIdAndUpdate(id, {
-      readingList: [...user.readingList, manga],
+      readingList: [manga, ...user.readingList],
     });
     updateUser.save();
 
@@ -159,4 +159,34 @@ const addManga = async (req: express.Request, res: express.Response) => {
   }
 };
 
-export default { createUser, loginUser, getInfo, changeInfo, addManga };
+const deleteManga = async (req: express.Request, res: express.Response) => {
+  try {
+    const manga_ep = req.body.manga_ep
+    const id = res.locals.id;
+    const user = await User.findById(id);
+    const oldArr = user.readingList
+
+    const newArr = []
+    oldArr.filter(o => {
+      if (o.mangaEP !== manga_ep) {
+        newArr.unshift(o)
+      }
+    })
+
+    const updateUser = await User.findByIdAndUpdate(id, {
+      readingList: newArr,
+    });
+
+    updateUser.save();
+
+    res.status(200).json({
+      message: "success",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Sever error",
+    });
+  }
+}
+
+export default { createUser, loginUser, getInfo, changeInfo, addManga, deleteManga };
