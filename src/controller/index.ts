@@ -157,7 +157,8 @@ const addManga = async (req: express.Request, res: express.Response) => {
     res.status(200).json({
       message: "success",
       user: {
-        ...user["_doc"]
+        ...user["_doc"],
+        readingList: [manga, ...user.readingList],
       }
     });
   } catch (err) {
@@ -191,7 +192,8 @@ const deleteManga = async (req: express.Request, res: express.Response) => {
     res.status(200).json({
       message: "success",
       user: {
-        ...user["_doc"]
+        ...user["_doc"],
+        readingList: newArr,
       }
     });
   } catch (err) {
