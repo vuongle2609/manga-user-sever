@@ -118,12 +118,28 @@ const changeInfo = async (req: express.Request, res: express.Response) => {
 
     const avatar = req.body.avatar || user.avatar;
     const name = req.body.name || user.name;
-    let password = req.body.password;
+    let newPassword = req.body.newPassword;
+    const password = req.body.password
 
-    if (password) {
-      password = await bcrypt.hash(password, 10);
+    if (newPassword) {
+      try {
+        const result = await bcrypt.compare(password, user.password)
+        if (result) {
+          newPassword = await bcrypt.hash(newPassword, 10);
+        } else {
+          res.status(400).json({
+            message: "Wrong password",
+          });
+          return;
+        }
+      } catch (err) {
+        res.status(500).json({
+          message: "Sever error",
+        });
+        return;
+      }
     } else {
-      password = user.password;
+      newPassword = user.password;
     }
 
     const updateUser = await User.findByIdAndUpdate(id, {
@@ -177,7 +193,18 @@ const deleteManga = async (req: express.Request, res: express.Response) => {
     const oldArr = user.readingList
 
     const newArr = []
-    oldArr.filter(o => {
+
+    interface mangaObjType {
+      mangaEP: String,
+      view: Number,
+      time: Date,
+      status: String,
+      rating: Number,
+      genres: String[],
+      cover: String
+    }
+
+    oldArr.filter((o: mangaObjType) => {
       if (o.mangaEP !== manga_ep) {
         newArr.push(o)
       }
@@ -203,4 +230,28 @@ const deleteManga = async (req: express.Request, res: express.Response) => {
   }
 }
 
-export default { createUser, loginUser, getInfo, changeInfo, addManga, deleteManga };
+const historyAdd = async (req: express.Request, res: express.Response) => {
+  try {
+    const manga = req.body.manga;
+    const id = res.locals.id;
+    const user = await User.findById(id);
+    const updateUser = await User.findByIdAndUpdate(id, {
+      historyList: [manga, ...user.historyList],
+    });
+    updateUser.save();
+
+    res.status(200).json({
+      message: "success",
+      user: {
+        ...user["_doc"],
+        historyList: [manga, ...user.historyList],
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Sever error",
+    });
+  }
+}
+
+export default { createUser, loginUser, getInfo, changeInfo, addManga, deleteManga, historyAdd };

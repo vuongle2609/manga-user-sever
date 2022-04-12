@@ -16,4 +16,6 @@ routes.post("/manga", authenToken, controllers.addManga);
 
 routes.delete("/manga", authenToken, controllers.deleteManga);
 
+routes.post("/history", authenToken, controllers.historyAdd);
+
 export default routes;

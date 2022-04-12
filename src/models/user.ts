@@ -18,13 +18,16 @@ const user = new Schema(
     },
     avatar: {
       type: String,
-      default: null,
+      default: "https://media.discordapp.net/attachments/893838005830303796/963523364524286022/unknown.png",
     },
     role: {
       type: String,
       default: "User",
     },
     readingList: {
+      type: Array,
+    },
+    historyList: {
       type: Array,
     },
   },
