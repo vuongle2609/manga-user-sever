@@ -51,7 +51,9 @@ const loginUser = async (req: express.Request, res: express.Response) => {
   //find user by username
   if (user[0] === undefined) {
     //not found
-    res.status(404).send("User not found");
+    res.status(404).json({
+      message: "User not found"
+    });
     return;
   }
 
@@ -75,6 +77,9 @@ const loginUser = async (req: express.Request, res: express.Response) => {
       res.status(200).json({
         message: "Success",
         accessToken,
+        user: {
+          ...user[0]
+        }
       });
     } else {
       res.status(400).json({
@@ -151,6 +156,9 @@ const addManga = async (req: express.Request, res: express.Response) => {
 
     res.status(200).json({
       message: "success",
+      user: {
+        ...user["_doc"]
+      }
     });
   } catch (err) {
     res.status(500).json({
@@ -182,6 +190,9 @@ const deleteManga = async (req: express.Request, res: express.Response) => {
 
     res.status(200).json({
       message: "success",
+      user: {
+        ...user["_doc"]
+      }
     });
   } catch (err) {
     res.status(500).json({
