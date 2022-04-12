@@ -11,12 +11,13 @@ const app = express();
 
 app.use(express.json());
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, content-type, Accept, authorization");
-  next();
-});
-
+const corsOpt = {
+  origin: process.env.CORS_ALLOW_ORIGIN || '*',
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOpt));
+app.options('*', cors(corsOpt));
 
 app.use("/", routes);
 
