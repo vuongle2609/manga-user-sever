@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 const corsOpt = {
-  origin: process.env.CORS_ALLOW_ORIGIN || '*',
+  origin: '*',
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['content-type', 'authorization']
 };
