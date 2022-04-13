@@ -142,25 +142,13 @@ const changeInfo = async (req: express.Request, res: express.Response) => {
       newPassword = user.password;
     }
 
-    const updateObj = {}
-
-    if (avatar) {
-      Object.defineProperty(updateObj, 'avatar', {
-        value: avatar
-      })
+    const updateObj = {
+      avatar,
+      name,
+      password: newPassword
     }
 
-    if (name) {
-      Object.defineProperty(updateObj, 'name', {
-        value: name
-      })
-    }
-
-    if (newPassword) {
-      Object.defineProperty(updateObj, 'newPassword', {
-        value: newPassword
-      })
-    }
+    console.log(updateObj);
 
     const updateUser = await User.findByIdAndUpdate(id, updateObj);
 
@@ -170,7 +158,9 @@ const changeInfo = async (req: express.Request, res: express.Response) => {
       message: "success",
       user: {
         ...user["_doc"],
-        ...updateObj
+        avatar,
+        name,
+        password: newPassword
       }
     });
   } catch (err) {
