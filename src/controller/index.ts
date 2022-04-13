@@ -142,16 +142,36 @@ const changeInfo = async (req: express.Request, res: express.Response) => {
       newPassword = user.password;
     }
 
-    const updateUser = await User.findByIdAndUpdate(id, {
-      avatar,
-      name,
-      password,
-    });
+    const updateObj = {}
+
+    if (avatar) {
+      Object.defineProperty(updateObj, 'avatar', {
+        value: avatar
+      })
+    }
+
+    if (name) {
+      Object.defineProperty(updateObj, 'name', {
+        value: name
+      })
+    }
+
+    if (newPassword) {
+      Object.defineProperty(updateObj, 'newPassword', {
+        value: newPassword
+      })
+    }
+
+    const updateUser = await User.findByIdAndUpdate(id, updateObj);
 
     updateUser.save();
 
     res.status(200).json({
       message: "success",
+      user: {
+        ...user["_doc"],
+        ...updateObj
+      }
     });
   } catch (err) {
     res.status(500).json({
