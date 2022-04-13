@@ -148,8 +148,6 @@ const changeInfo = async (req: express.Request, res: express.Response) => {
       password: newPassword
     }
 
-    console.log(updateObj);
-
     const updateUser = await User.findByIdAndUpdate(id, updateObj);
 
     updateUser.save();
@@ -197,7 +195,6 @@ const addManga = async (req: express.Request, res: express.Response) => {
 const deleteManga = async (req: express.Request, res: express.Response) => {
   try {
     const manga_ep = req.body.manga_ep
-    console.log(manga_ep)
     const id = res.locals.id;
     const user = await User.findById(id);
     const oldArr = user.readingList
@@ -245,16 +242,26 @@ const historyAdd = async (req: express.Request, res: express.Response) => {
     const manga = req.body.manga;
     const id = res.locals.id;
     const user = await User.findById(id);
+
+    const hisArr = user["_doc"].historyList
+    const newHistory = []
+    hisArr.filter((item: any) => {
+      if (item.mangaEP !== manga.mangaEP) {
+        newHistory.push(item)
+      }
+    })
+
     const updateUser = await User.findByIdAndUpdate(id, {
-      historyList: [manga, ...user.historyList],
+      historyList: [manga, ...newHistory],
     });
+
     updateUser.save();
 
     res.status(200).json({
       message: "success",
       user: {
         ...user["_doc"],
-        historyList: [manga, ...user.historyList],
+        historyList: [manga, ...newHistory],
       }
     });
   } catch (err) {

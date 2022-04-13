@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 const corsOpt = {
-  origin: 'https://paff-web-manga.vercel.app',
+  origin: '*',
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
