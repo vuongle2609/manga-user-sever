@@ -16,8 +16,8 @@ const corsOpt = {
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
-// app.use(cors(corsOpt));
-// app.options('*', cors(corsOpt));
+app.use(cors(corsOpt));
+app.options('*', cors(corsOpt));
 
 app.use("/", routes);
 
